@@ -29,7 +29,20 @@ public class PlayerController : MonoBehaviour
 
     void OnDrawGizmos()
     {
-            
+        if(_bc != null)
+        {
+            if (_isGround)
+            {
+                Gizmos.color = Color.green;
+            }
+            else
+            {
+                Gizmos.color = Color.red;
+            }
+            Vector2 boxPos = transform.position;
+            boxPos.y += _bc.offset.y;
+            Gizmos.DrawWireCube(boxPos, _bc.size);
+        }
     }
 
     void Awake()
@@ -46,23 +59,24 @@ public class PlayerController : MonoBehaviour
         _bc = GetComponent<BoxCollider2D>();
         _sr = GetComponent<SpriteRenderer>();
         _ani = GetComponent<Animator>();
-        _isGround = true;
+        _isGround = false;
     }
 
     void Update()
     {
         _moveDirection = new Vector2(Input.GetAxis("Horizontal"), 0);
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(_isGround)
         {
-            // StartCoroutine(doJump());
             DoJump();
         }
+
         CheckFlip();
         
     }
 
     void FixedUpdate()
     {
+        // 좌우 움직임 처리
         if(_moveDirection.x != 0)
         {
             _rb.AddForce(_moveDirection * speed);
@@ -72,11 +86,12 @@ public class PlayerController : MonoBehaviour
         {
             _rb.velocity = new Vector2(_rb.velocity.x * 0.9f, _rb.velocity.y);
         }
-        _ani.SetFloat("VelocityY", _rb.velocity.y);
+        // 상하 움직임 처리
         if (!_isGround)
         {
             CheckGround();
         }
+        _ani.SetFloat("VelocityY", _rb.velocity.y);
     }
 
     void CheckFlip()
@@ -99,12 +114,15 @@ public class PlayerController : MonoBehaviour
     {
         if(_rb.velocity.y < 0)
         {
-            RaycastHit2D hit = Physics2D.BoxCast(transform.position, _bc.size, 0.0f, Vector2.down, 0.1f, whatIsPlatform);
+            Vector2 boxPos = transform.position;
+            boxPos.y += _bc.offset.y;
+            RaycastHit2D hit = Physics2D.BoxCast(boxPos, _bc.size, 0.0f, Vector2.down, 0.1f, whatIsPlatform);
             if (hit.collider != null)
             {
                 _isGround = true;
-                _ani.SetTrigger("Ground");
                 GameManager.Instance.setCameraPos(transform.position.y);
+                // _rb.velocity = new Vector2(_rb.velocity.x, 0);
+                // DoJump();
             }
         }
     }

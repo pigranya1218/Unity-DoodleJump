@@ -264,7 +264,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 64caebfbeb347f74ca0bf6c0498c6763, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2784314, g: 0.2784314, b: 0.2784314, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -401,15 +401,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2959638637180567200, guid: 85b68926aa75bda4fbda582dacdbc758,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2959638637180567202, guid: 85b68926aa75bda4fbda582dacdbc758,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.96
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2959638637180567202, guid: 85b68926aa75bda4fbda582dacdbc758,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.84
+      value: -3.28
       objectReference: {fileID: 0}
     - target: {fileID: 2959638637180567202, guid: 85b68926aa75bda4fbda582dacdbc758,
         type: 3}

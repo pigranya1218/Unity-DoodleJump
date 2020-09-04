@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     public GameObject platformPrefab;
 
     GameObject[] _platforms;
-    int _currLastIndex = 29;
     float _currentOffsetY = 0;
     float _remainOffsetY = 0;
 
@@ -30,8 +29,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        _platforms = new GameObject[30];
-        for(int i = 0; i < 30; i++)
+        _platforms = new GameObject[20];
+        for(int i = 0; i < 20; i++)
         {
             _platforms[i] = Instantiate(platformPrefab);
         }
@@ -39,7 +38,7 @@ public class GameManager : MonoBehaviour
         firstPos.y -= 0.7f;
         _currentOffsetY = firstPos.y;
         _platforms[0].transform.position = firstPos;
-        for(int i = 1; i < 30; i++)
+        for(int i = 1; i < 20; i++)
         {
             Vector2 pos = _platforms[i - 1].transform.position;
             pos.x = Random.Range(-2.3f, 2.3f);
@@ -50,6 +49,16 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        for(int i = 0; i < 20; i++)
+        {
+            if(_platforms[i].transform.position.y <= -6f)
+            {
+                Vector2 newPos = _platforms[(i + 19) % 20].transform.position;
+                newPos.x = Random.Range(-2.3f, 2.3f);
+                newPos.y += Random.Range(1f, 2f);
+                _platforms[i].transform.position = newPos;
+            }
+        }
     }
 
     public void setCameraPos(float y)
@@ -64,7 +73,7 @@ public class GameManager : MonoBehaviour
         float remainOffsetY = _remainOffsetY;
         for(int i = 0; i < 20; i++)
         {
-            for(int j = 0; j < 30; j++)
+            for(int j = 0; j < 20; j++)
             {
                 Vector2 newPlatformPos = _platforms[j].transform.position;
                 newPlatformPos.y -= 0.05f * remainOffsetY;
