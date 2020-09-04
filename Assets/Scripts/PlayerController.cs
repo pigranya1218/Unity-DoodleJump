@@ -65,13 +65,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         _moveDirection = new Vector2(Input.GetAxis("Horizontal"), 0);
-        if(_isGround)
+        if(_isGround && _rb.velocity.y == 0)
         {
             DoJump();
         }
 
         CheckFlip();
-        
     }
 
     void FixedUpdate()
@@ -112,26 +111,24 @@ public class PlayerController : MonoBehaviour
 
     void CheckGround()
     {
-        if(_rb.velocity.y < 0)
+        if(_rb.velocity.y <= 0)
         {
             Vector2 boxPos = transform.position;
             boxPos.y += _bc.offset.y;
             RaycastHit2D hit = Physics2D.BoxCast(boxPos, _bc.size, 0.0f, Vector2.down, 0.1f, whatIsPlatform);
             if (hit.collider != null)
             {
-                _isGround = true;
                 GameManager.Instance.setCameraPos(transform.position.y);
-                // _rb.velocity = new Vector2(_rb.velocity.x, 0);
-                // DoJump();
+                _isGround = true;
             }
         }
     }
 
     void Jump() // 점프를 실행하는 함수
     {
+        _rb.velocity = new Vector2(_rb.velocity.x, 0.1f);
         _rb.AddForce(Vector2.up * jumpPower);
         _isGround = false;
-        // jumpDust.SetActive(true);
     }
 
     void DoJump() // 점프하는 함수
