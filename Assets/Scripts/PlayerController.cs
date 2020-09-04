@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
+    static PlayerController instance;
 
     public float speed = 10;
     public float maxSpeed = 10;
@@ -21,6 +30,14 @@ public class PlayerController : MonoBehaviour
     void OnDrawGizmos()
     {
             
+    }
+
+    void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
     }
 
     void Start()
@@ -87,6 +104,7 @@ public class PlayerController : MonoBehaviour
             {
                 _isGround = true;
                 _ani.SetTrigger("Ground");
+                GameManager.Instance.setCameraPos(transform.position.y);
             }
         }
     }
