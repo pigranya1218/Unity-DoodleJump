@@ -61,14 +61,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void setCameraPos(float y)
+    // 카메라를 1초에 걸쳐 움직임 (평범하게 발판을 밟아 올라갈 때)
+    public void setCameraPosSlowly(float y)
+    {
+        if (y > _currentOffsetY)
+        {
+            _remainOffsetY += y - _currentOffsetY;
+            StopAllCoroutines();
+            StartCoroutine(MovePlatformsSlowly());
+        }
+    }
+
+    // 카메라를 즉시즉시 움직임 (스프링 등 급발진할 때)
+    public void setCameraPosFastly(float y)
     {
         _remainOffsetY += y - _currentOffsetY;
         StopAllCoroutines();
-        StartCoroutine(movePlatforms());
+        MovePlatformFastly();
     }
 
-    IEnumerator movePlatforms()
+    IEnumerator MovePlatformsSlowly()
     {
         float remainOffsetY = _remainOffsetY;
         for(int i = 0; i < 20; i++)
@@ -87,6 +99,22 @@ public class GameManager : MonoBehaviour
             _remainOffsetY -= 0.05f * remainOffsetY;
             yield return new WaitForSeconds(0.01f);
         }
+        _remainOffsetY = 0;
+    }
+
+    void MovePlatformFastly()
+    {
+        for (int j = 0; j < 20; j++)
+        {
+            Vector2 newPlatformPos = _platforms[j].transform.position;
+            newPlatformPos.y -= _remainOffsetY;
+            _platforms[j].transform.position = newPlatformPos;
+        }
+
+        Vector2 newPlayerPos = PlayerController.Instance.transform.position;
+        newPlayerPos.y -= _remainOffsetY;
+        PlayerController.Instance.transform.position = newPlayerPos;
+
         _remainOffsetY = 0;
     }
 

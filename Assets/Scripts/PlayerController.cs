@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
             RaycastHit2D hit = Physics2D.BoxCast(boxPos, _bc.size, 0.0f, Vector2.down, 0.1f, whatIsPlatform);
             if (hit.collider != null)
             {
-                GameManager.Instance.setCameraPos(transform.position.y);
+                GameManager.Instance.setCameraPosSlowly(transform.position.y);
                 _rb.velocity = new Vector2(0, _rb.velocity.y);
                 _isGround = true;
             }
