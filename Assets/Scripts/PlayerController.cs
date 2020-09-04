@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed = 10;
     public float jumpPower = 300;
     public LayerMask whatIsPlatform;
+    public GameObject jumpDust;
 
     Rigidbody2D _rb;
     BoxCollider2D _bc;
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
         _bc = GetComponent<BoxCollider2D>();
         _sr = GetComponent<SpriteRenderer>();
         _ani = GetComponent<Animator>();
+        _isGround = true;
     }
 
     void Update()
@@ -39,10 +41,7 @@ public class PlayerController : MonoBehaviour
             DoJump();
         }
         CheckFlip();
-        if(!_isGround)
-        {
-            CheckGround();
-        }
+        
     }
 
     void FixedUpdate()
@@ -55,6 +54,11 @@ public class PlayerController : MonoBehaviour
         else
         {
             _rb.velocity = new Vector2(_rb.velocity.x * 0.9f, _rb.velocity.y);
+        }
+        _ani.SetFloat("VelocityY", _rb.velocity.y);
+        if (!_isGround)
+        {
+            CheckGround();
         }
     }
 
@@ -76,13 +80,22 @@ public class PlayerController : MonoBehaviour
 
     void CheckGround()
     {
-        RaycastHit2D hit = Physics2D.BoxCast(_bc.transform.position, _bc.size, 0.0f, Vector2.down);
-
+        if(_rb.velocity.y < 0)
+        {
+            RaycastHit2D hit = Physics2D.BoxCast(transform.position, _bc.size, 0.0f, Vector2.down, 0.1f, whatIsPlatform);
+            if (hit.collider != null)
+            {
+                _isGround = true;
+                _ani.SetTrigger("Ground");
+            }
+        }
     }
 
     void Jump() // 점프를 실행하는 함수
     {
         _rb.AddForce(Vector2.up * jumpPower);
+        _isGround = false;
+        // jumpDust.SetActive(true);
     }
 
     void DoJump() // 점프하는 함수
