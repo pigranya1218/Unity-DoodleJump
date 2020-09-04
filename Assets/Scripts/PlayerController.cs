@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed = 10;
     public float jumpPower = 300;
     public LayerMask whatIsPlatform;
-    public GameObject jumpDust;
+    public GameObject jumpDustPrefab;
+    public bool xFlip;
 
     Rigidbody2D _rb;
     BoxCollider2D _bc;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     Vector2 _moveDirection;
     Animator _ani;
     bool _isGround;
+    GameObject _jumpDust;
 
     void OnDrawGizmos()
     {
@@ -60,6 +62,10 @@ public class PlayerController : MonoBehaviour
         _sr = GetComponent<SpriteRenderer>();
         _ani = GetComponent<Animator>();
         _isGround = false;
+        _jumpDust = Instantiate(jumpDustPrefab);
+        _jumpDust.SetActive(false);
+        
+        xFlip = false;
     }
 
     void Update()
@@ -107,10 +113,12 @@ public class PlayerController : MonoBehaviour
             if (_moveDirection.x < 0) // 왼쪽 보게 하기
             {
                 _sr.flipX = true;
+                xFlip = true;
             }
             else
             {
                 _sr.flipX = false;
+                xFlip = false;
             }
         }
     }
@@ -137,6 +145,8 @@ public class PlayerController : MonoBehaviour
         _rb.velocity = new Vector2(_rb.velocity.x, 0.1f);
         _rb.AddForce(Vector2.up * jumpPower);
         _isGround = false;
+        _jumpDust.SetActive(true);
+        _jumpDust.transform.position = transform.position;
     }
 
     void DoJump() // 점프하는 함수
