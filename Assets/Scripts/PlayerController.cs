@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
             if (hit.collider != null)
             {
                 GameManager.Instance.setCameraPosSlowly(transform.position.y);
-                _rb.velocity = new Vector2(0, _rb.velocity.y);
+                transform.position = new Vector2(transform.position.x, hit.collider.transform.position.y + hit.collider.offset.y + 0.01f - _bc.offset.y);
                 _isGround = true;
             }
         }
