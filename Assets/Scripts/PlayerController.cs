@@ -9,11 +9,12 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed = 10;
     public float jumpPower = 300;
     public LayerMask whatIsPlatform;
+
     Rigidbody2D _rb;
     BoxCollider2D _bc;
     SpriteRenderer _sr;
     Vector2 _moveDirection;
-    WaitForSeconds _1s;
+    Animator _ani;
     bool _isGround;
 
     void OnDrawGizmos()
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _bc = GetComponent<BoxCollider2D>();
         _sr = GetComponent<SpriteRenderer>();
-        _1s = new WaitForSeconds(1.0f);
+        _ani = GetComponent<Animator>();
     }
 
     void Update()
@@ -35,7 +36,7 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             // StartCoroutine(doJump());
-            Jump();
+            DoJump();
         }
         CheckFlip();
         if(!_isGround)
@@ -84,10 +85,8 @@ public class PlayerController : MonoBehaviour
         _rb.AddForce(Vector2.up * jumpPower);
     }
 
-
-    IEnumerator doJump() // 땅에 닿았다고 판단되면 호출되는 함수
+    void DoJump() // 점프하는 함수
     {
-        yield return _1s;
-        Jump();
+        _ani.SetTrigger("Jump");
     }
 }
