@@ -69,7 +69,14 @@ public class PlayerController : MonoBehaviour
         {
             DoJump();
         }
-
+        if(transform.position.x <= -2.8f)
+        {
+            transform.position = new Vector2(2.8f, transform.position.y);
+        }
+        else if (transform.position.x >= 2.8f) 
+        {
+            transform.position = new Vector2(-2.8f, transform.position.y);
+        }
         CheckFlip();
     }
 
@@ -83,7 +90,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _rb.velocity = new Vector2(_rb.velocity.x * 0.9f, _rb.velocity.y);
+            _rb.velocity = new Vector2(_rb.velocity.x * 0.8f, _rb.velocity.y);
         }
         // 상하 움직임 처리
         if (!_isGround)
@@ -106,7 +113,6 @@ public class PlayerController : MonoBehaviour
                 _sr.flipX = false;
             }
         }
-        
     }
 
     void CheckGround()
@@ -119,6 +125,7 @@ public class PlayerController : MonoBehaviour
             if (hit.collider != null)
             {
                 GameManager.Instance.setCameraPos(transform.position.y);
+                _rb.velocity = new Vector2(0, _rb.velocity.y);
                 _isGround = true;
             }
         }
